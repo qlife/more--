@@ -6,10 +6,14 @@ CPP_OBJ = main.o
 
 OBJS = $(C_OBJ) $(CPP_OBJ)
 
+CFLAGS = -g
+CXXFLAGS = -g
+LDFLAGS = -lncurses -lm
+
 all:more--
 
 more--:${OBJS}
-	$(CXX) $(OBJS) -o more-- 
+	$(CXX) $(OBJS) $(CXXFLAGS) $(LDFLAGS) -o more--
 
 .PHONY clean:
 	rm -f $(OBJS)
