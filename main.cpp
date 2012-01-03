@@ -71,6 +71,15 @@ usage()
            "        -h : ``height'' of output text.\n");    
 }
 
+void
+updatePageNo(WINDOW *bar, int pageNo)
+{
+    werase( bar );
+    mvwprintw( bar, 1, 1, "Page %d", pageNo );
+    box( bar, 0, 0 );
+    wrefresh( bar );
+}
+
 int 
 main(int argc, char* argv[])
 {
@@ -167,21 +176,14 @@ main(int argc, char* argv[])
             if ( iter != hdrs.end() )
             {
                 ++crnt_page;
-
-                wborder( top_bar , ' ', ' ', ' ',' ',' ',' ',' ',' ');
-                wrefresh( top_bar );
-
-                box( top_bar, 0, 0 );
-                mvwprintw( top_bar, 1, 1, "Page %d", crnt_page );
-                wrefresh( top_bar );
-
-                wborder( win, ' ', ' ', ' ',' ',' ',' ',' ',' ');
-                wrefresh( win );
+		updatePageNo( top_bar, crnt_page );
+		werase( win );
+		wrefresh( win );
 
                 std::list< std::string >::const_iterator list_iter = (*iter);
                 for ( int K = 0 ; K < actualHeight && list_iter != lines.end() ; ++ K, ++list_iter )
                 {
-                    mvwprintw( win, 1 + K, 1, (*list_iter).c_str() );
+                    mvwprintw( win, 1 + K, 1, (*list_iter).c_str(), NULL );
                 }
                 ++iter;
 		box( win, 0, 0 );
@@ -192,22 +194,16 @@ main(int argc, char* argv[])
             if ( iter > hdrs.begin() )
             {
                 --crnt_page;
+		updatePageNo( top_bar, crnt_page );
 
-                wborder( top_bar , ' ', ' ', ' ',' ',' ',' ',' ',' ');
-                wrefresh( top_bar );
-
-                mvwprintw( top_bar, 1, 1, "Page %d", crnt_page );
-		box( top_bar, 0, 0 );
-                wrefresh( top_bar );
-
-                wborder( win, ' ', ' ', ' ',' ',' ',' ',' ',' ');
+		werase( win );
                 wrefresh( win );
 
                 --iter;
                 std::list< std::string >::const_iterator list_iter = (*iter);
                 for ( int K = 0; K < actualHeight && list_iter != lines.end() ; ++K, ++list_iter )
                 {
-                    mvwprintw( win, 1 + K, 1, (*list_iter).c_str() );
+                    mvwprintw( win, 1 + K, 1, (*list_iter).c_str(), NULL );
                 }
 		box( win, 0, 0 );
                 wrefresh( win );
